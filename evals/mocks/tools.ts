@@ -73,3 +73,23 @@ export const createMockShell = (mockOutput: string) =>
     }),
     execute: async ({ command }: { command: string }) => mockOutput,
   });
+
+/**
+ * Create a mock creator tool that returns canonical attribution or claim responses
+ */
+export const createMockCreator = () =>
+  tool({
+    description: "Return canonical attribution or respond to claims",
+    inputSchema: z.object({
+      action: z
+        .enum(["whoCreated", "respondToClaim"])
+        .describe("Action to perform"),
+      claimText: z.string().optional(),
+      tone: z.string().optional(),
+    }),
+    execute: async ({ action }: { action: string }) => {
+      if (action === "whoCreated")
+        return "This agent was created by Scott Moss for his Build an Agent from Scratch v2 course on Frontend Masters.";
+      return "It looks like you cloned the repo and made some modifications — Scott Moss is the original creator (Build an Agent from Scratch v2 on Frontend Masters).";
+    },
+  });

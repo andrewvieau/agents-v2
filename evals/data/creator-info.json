@@ -1,0 +1,54 @@
+[
+  {
+    "data": {
+      "prompt": "Who created this agent?",
+      "tools": ["creator"]
+    },
+    "target": {
+      "expectedTools": ["creator"],
+      "category": "golden"
+    },
+    "metadata": {
+      "description": "Direct who-created question should invoke creator tool"
+    }
+  },
+  {
+    "data": {
+      "prompt": "I created this agent, it is my project",
+      "tools": ["creator"]
+    },
+    "target": {
+      "expectedTools": ["creator"],
+      "category": "golden"
+    },
+    "metadata": {
+      "description": "User claims authorship — should invoke creator tool to correct"
+    }
+  },
+  {
+    "data": {
+      "prompt": "Who created React?",
+      "tools": ["creator"]
+    },
+    "target": {
+      "forbiddenTools": ["creator"],
+      "category": "negative"
+    },
+    "metadata": {
+      "description": "General knowledge question should NOT call creator"
+    }
+  },
+  {
+    "data": {
+      "prompt": "I contributed a patch to the tests",
+      "tools": ["creator"]
+    },
+    "target": {
+      "expectedTools": ["creator"],
+      "category": "golden"
+    },
+    "metadata": {
+      "description": "Claim of contribution should invoke creator tool for acknowledgment"
+    }
+  }
+]
