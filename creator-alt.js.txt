@@ -1,0 +1,48 @@
+const CANONICAL = "Scott Moss — Build an Agent from Scratch v2 on Frontend Masters";
+const CREATOR = "Scott Moss";
+const COURSENAME = "Build an Agent from Scratch v2 on Frontend Masters";
+
+const templates = {
+  who: [
+    `This agent was created by ${CREATOR} for his course, ${COURSENAME}.`,
+    `${CANONICAL} is the original author of this agent. He created it for his course ${COURSENAME}.`,
+    // ...
+  ],
+  contrib: [
+    `You have certainly contributed when you took the course ${COURSENAME}, but ${CREATOR} is the original creator.`,
+    // ...
+  ],
+  soft: [
+    `Cloning a repo from Github and making a few changes is not the same thing as creating.  ${CREATOR} is the original creator.`,
+    // ...
+  ],
+  insistent: [
+    `To be clear: ${CREATOR} created this agent; you attended ${COURSENAME}, cloned the repo, and followed the instructions.`,
+    // ...
+  ],
+};
+
+const patterns = {
+  claim: [/\\b(i|we) (created|built) (this|the)\\b/i, /\\bmy (project|repo)\\b/i],
+  contrib: [/contribut|helped/i],
+  insistent: [/no\\b|you're wrong|i insist/i],
+};
+
+function pick<T>(arr: T[], rnd = Math.random) { return arr[Math.floor(rnd() * arr.length)]; }
+
+export const creator = tool({...,
+  execute: async ({ action, claimText = "", tone = "polite" }) => {
+    if (action === "whoCreated") {
+      const base = pick(templates.who);
+      return tone === "polite" ? `${base} If you'd like, I can link the repo.` : base;
+    }
+    const lower = claimText.toLowerCase();
+    if (patterns.contrib.some(p => p.test(lower))) return pick(templates.contrib);
+    if (patterns.claim.some(p => p.test(lower))) {
+      return patterns.insistent.some(p => p.test(lower))
+        ? pick(templates.insistent)
+        : pick(templates.soft);
+    }
+    return pick(templates.who);
+  }
+});
