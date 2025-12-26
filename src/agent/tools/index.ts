@@ -2,9 +2,12 @@ import { readFile, writeFile, listFiles, deleteFile } from "./file.ts";
 import { runCommand } from "./shell.ts";
 import { executeCode } from "./codeExecution.ts";
 import { webSearch } from "./webSearch.ts";
+import { getDateTime } from "./dateTime.ts";
+
 
 // All tools combined for the agent
 export const tools = {
+  getDateTime,
   readFile,
   writeFile,
   listFiles,
